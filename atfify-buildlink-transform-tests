@@ -1,0 +1,37 @@
+#!/bin/sh
+
+atfify_thisfile() {
+
+	oldtest=$1
+	newtest=`basename ${oldtest} .mk | sed -e 's|-|_|g'`
+	newinput=`cat ${oldtest} | grep '^	@test=' | sed -e 's|^	@test=||' -e 's|";.*\$|"|'`
+	newexpout=`cat ${oldtest} | grep '^	expected=' | sed -e 's|^	expected=||' -e 's|";.*\$|"|'`
+
+	cat > test-${newtest}.sh <<EOF
+# \$NetBSD\$
+#
+
+atf_test_case ${newtest}
+${newtest}_head() {
+    atf_set 'descr' 'XXX autoconverted from ${oldtest}'
+}
+${newtest}_body() {
+    input=${newinput}
+    echo ${newexpout} > expout
+    atf_check 'echowrapper \${input}' 0 expout ignore
+}
+
+atf_init_test_cases() {
+    atf_add_test_case ${newtest}
+}
+EOF
+}
+
+main() {
+	for i in "$@"; do
+		atfify_thisfile "$i"
+	done
+}
+
+main "$@"
+exit $?

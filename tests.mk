@@ -18,6 +18,7 @@ post-wrapper:
 MAKE_ENV+=	BUILDLINK_DIR=${BUILDLINK_DIR:Q}
 MAKE_ENV+=	_USE_RPATH=${_USE_RPATH:Q}
 MAKE_ENV+=	WRAPPER_DEBUG=yes
+MAKE_ENV+=	WRAPPER_BINDIR=${WRAPPER_BINDIR:Q}
 
 # The default transforms are already available to automated tests. To
 # expose additional transforms to ATF, list them below:
